@@ -3,8 +3,8 @@ from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import sqlite3
 
-DB_PATH = "/c/Users/daniel.innes/Documents/SHG/production.sqlite3"
-LEASES_FILE = "/c/Users/daniel.innes/Documents/SHG/dhcp.leases"
+DB_PATH = "/srv/lxc/mud-supervisor/rootfs/app/fountain/production.sqlite3"
+LEASES_FILE = "/var/dhcp.leases"
 LEASES_FILE_PARSE_ORDER = ['unix time', 'mac address', 'ip lease', 'host name', 'unknown']
 
 
