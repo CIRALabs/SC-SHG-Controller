@@ -1,5 +1,5 @@
 # SC-SHG-Controller
-CIRA Labs Project information: https://cira.ca/cira-secure-home-gateway
+## CIRA Labs Project information: https://cira.ca/cira-secure-home-gateway
 The process SC-SHG Controller learns of the new association and collects the connection information on the device.
 The device may be new, or may just be reconnecting; both events are interesting.
 Devices are indexed by their layer-2 address (ethernet mac address).
