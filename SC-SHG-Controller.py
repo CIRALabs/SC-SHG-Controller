@@ -2,16 +2,18 @@ import logging
 import sqlite3
 import sys
 import time
-
-from IPy import IP
+import re
 
 DNSMASQ_MSG_PARSE_ORDER = ['sc-name', 'process', 'mac', 'ip', 'name']
 DB_PATH = "/srv/lxc/mud-supervisor/rootfs/app/fountain/production.sqlite3"
+# DB_PATH = '/c/Users/daniel.innes/Documents/Repositories/SC-SHG-Controller/testing/testing.sqlite3'
+IPV4SEG = r'(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])'
+IPV4ADDR = r'(?:(?:' + IPV4SEG + r'/.){3,3}' + IPV4SEG + r')'
 
 
 def process_dnsmasq_info():
     if not dnsmasq_info['process'] == 'del':
-        ip_version = 'ipv4' if IP(dnsmasq_info['ip']).version() == 4 else 'ipv6'
+        ip_version = 'ipv6' if re.match(IPV4ADDR, dnsmasq_info['ip']) is None else 'ipv4'
         unix_time = int(time.time())
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
