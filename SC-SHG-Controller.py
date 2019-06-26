@@ -6,7 +6,7 @@ import re
 
 DNSMASQ_MSG_PARSE_ORDER = ['sc-name', 'process', 'mac', 'ip', 'name']
 DB_PATH = "/srv/lxc/mud-supervisor/rootfs/app/fountain/production.sqlite3"
-# DB_PATH = '/c/Users/daniel.innes/Documents/Repositories/SC-SHG-Controller/testing/testing.sqlite3'
+# DB_PATH = 'testing/testing.sqlite3'
 IPV4SEG = r'(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])'
 IPV4ADDR = r'(?:(?:' + IPV4SEG + r'/.){3,3}' + IPV4SEG + r')'
 
@@ -21,7 +21,7 @@ def process_dnsmasq_info():
         sqlite_info = cursor.fetchall()
 
         logger.debug('info from production db formatted(hostname,MAC address,IP address): %s', sqlite_info)
-        if dnsmasq_info['mac'] not in [y[1] for y in sqlite_info]:
+        if dnsmasq_info['mac'] not in set(row[1] for row in sqlite_info):
             cursor.execute(
                 'INSERT INTO devices (name, eui64, {0}, created_at, updated_at, quaranteed) VALUES (?, ?, ?, ?, ?, ?)'.format(
                     ip_version),
@@ -29,7 +29,7 @@ def process_dnsmasq_info():
             logger.info(
                 'adding new device to production db hostname: %s, MAC address: %s, IP address: %s unix_time: %s',
                 dnsmasq_info['name'], dnsmasq_info['mac'], dnsmasq_info['ip'], unix_time)
-        elif not dnsmasq_info['ip'] == [y[2] for y in sqlite_info if y[1] == dnsmasq_info['mac']][0]:
+        elif not dnsmasq_info['ip'] == [row[2] for row in sqlite_info if row[1] == dnsmasq_info['mac']][0]:
             cursor.execute('UPDATE devices SET {0} = ?, updated_at = ? WHERE eui64 = ?'.format(ip_version),
                            (dnsmasq_info['ip'], unix_time, dnsmasq_info['mac']))
             logger.info(
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     logger.setLevel(logging.INFO)
     stream_handler = logging.StreamHandler(sys.stdout)
     stream_handler.setLevel(logging.INFO)
-    stream_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    stream_handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
     logger.addHandler(stream_handler)
 
     dnsmasq_msg = sys.argv
