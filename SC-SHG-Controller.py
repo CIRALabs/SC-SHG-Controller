@@ -10,7 +10,7 @@ def check_eui64(eui64: str) -> bool:
 
 
 DNSMASQ_MSG_PARSE_ORDER = ['sc-name', 'process', 'mac', 'ip', 'name']
-SERVER_ADDRESS = ''
+SERVER_ADDRESS = '/etc/shg/sockets/mud_telemetry.sock'
 dnsmasq_msg = sys.argv
 if len(dnsmasq_msg) == len(DNSMASQ_MSG_PARSE_ORDER):
     dnsmasq_info = dict(zip(DNSMASQ_MSG_PARSE_ORDER, dnsmasq_msg))
