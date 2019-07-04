@@ -5,7 +5,7 @@ import sys
 
 
 def check_eui64(eui64: str) -> bool:
-    process = subprocess.Popen('rake getEUI64')
+    process = subprocess.Popen(['rake', 'get_eui64', eui64])
     return eui64 in process.stdout.readlines()[0]
 
 
@@ -24,7 +24,7 @@ if len(dnsmasq_msg) == len(DNSMASQ_MSG_PARSE_ORDER):
                               "details": {"mac_addr": dnsmasq_info['mac'], ip_version: dnsmasq_info['ip'],
                                           "name": dnsmasq_info['name']}}).encode('utf-8')
         elif check_eui64(dnsmasq_info['mac']):
-            msg = json.dumps({"cmd": "update",
+            msg = json.dumps({"cmd": "old",
                               "details": {"mac_addr": dnsmasq_info['mac'], ip_version: dnsmasq_info['ip'],
                                           "name": dnsmasq_info['name']}}).encode('utf-8')
         else:
